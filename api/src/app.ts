@@ -8,8 +8,8 @@ import morgan from "morgan";
 import linksRouter from "./routes/link.route";
 import authRouter from "./routes/auth.route";
 import collectionsRouter from "./routes/collection.route";
-import { errorHandler } from "./middlewares/error";
-import { notFoundHandler } from "./middlewares/notfound";
+import errorHandler from "./middlewares/error";
+import notFoundHandler from "./middlewares/not-found";
 
 const app = express();
 

@@ -1,7 +1,7 @@
 import { Router } from "express";
-import { requireAuth } from "../middlewares/auth";
-import { validate } from "../middlewares/validate";
-import { linksController } from "../controllers/link.controller";
+import requireAuth from "../middlewares/auth";
+import validate from "../middlewares/validate";
+import linksController from "../controllers/link.controller";
 import {
     createLinkSchema,
     getLinksQuerySchema,

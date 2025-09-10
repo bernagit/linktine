@@ -1,9 +1,8 @@
 import { RequestHandler } from "express";
 import { ZodObject, ZodError } from "zod";
 
-export const validate =
-    (schema: ZodObject<any>): RequestHandler =>
-    (req, res, next) => {
+const validate = (schema: ZodObject<any>): RequestHandler => {
+    return (req, res, next) => {
         try {
             const result = schema.parse({
                 body: req.body,
@@ -19,3 +18,6 @@ export const validate =
             next(e);
         }
     };
+};
+
+export default validate;

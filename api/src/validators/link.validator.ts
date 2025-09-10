@@ -15,7 +15,7 @@ export const updateLinkSchema = z.object({
         id: z.string(),
     }),
     body: z.object({
-        url: z.string().url().optional(),
+        url: z.url().optional(),
         tags: z.array(z.string()).optional(),
         collectionId: z.string().optional().nullable(),
         note: z.string().optional().nullable(),

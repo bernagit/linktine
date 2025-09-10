@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { prisma } from "../db/prisma";
 import { env } from "../config/env";
 
-export async function requireAuth(req: Request, res: Response, next: NextFunction) {
+export default async function requireAuth(req: Request, res: Response, next: NextFunction) {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader?.startsWith("Bearer ")) {
