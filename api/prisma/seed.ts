@@ -14,6 +14,7 @@ async function main() {
         update: {},
         create: {
             email: "admin@example.com",
+            name: "Admin",
             password,
             role: "ADMIN",
         },
@@ -28,13 +29,12 @@ async function main() {
         skipDuplicates: true,
     });
 
-    console.log("✅ Database seeded");
+    console.log("Database seeded");
 }
 
 main()
     .catch((e) => {
         console.error(e);
-        process.exit(1);
     })
     .finally(async () => {
         await prisma.$disconnect();

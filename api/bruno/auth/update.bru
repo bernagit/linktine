@@ -1,0 +1,21 @@
+meta {
+  name: update
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{base_url}}/auth/me
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "bernacccc"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
