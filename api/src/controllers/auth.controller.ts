@@ -4,7 +4,7 @@ import { env } from "../config/env";
 
 const setCookie = (res: Response, token: string) => {
     const isProduction = env.NODE_ENV === "production";
-    res.cookie("token", token, {
+    res.cookie("auth_token", token, {
         httpOnly: true,
         secure: isProduction,
         sameSite: isProduction ? "none" : "lax",
@@ -28,7 +28,7 @@ const login = async (req: Request, res: Response) => {
 };
 
 const logout = (req: Request, res: Response) => {
-    res.clearCookie("token", {
+    res.clearCookie("auth_token", {
         httpOnly: true,
         secure: env.NODE_ENV === "production",
         sameSite: env.NODE_ENV === "production" ? "none" : "lax",

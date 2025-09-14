@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { createAccessToken } from "../utils/jwt";
 import { ChangePwdInput, LoginInput, RegisterInput, UpdateInput } from "validators/auth.validator";
 import createHttpError from "http-errors";
+import { Prisma } from "@prisma/client";
 
 export async function register(data: RegisterInput) {
     const hashedPassword = await bcrypt.hash(data.password, 10);
@@ -21,9 +22,12 @@ export async function register(data: RegisterInput) {
 }
 
 export async function login(data: LoginInput) {
-    // login with username or email
-    const whereClause = { OR: [{ email: data.identifier }, { name: data.identifier }] };
-
+    const whereClause = {
+        OR: [
+            { email: { equals: data.identifier, mode: Prisma.QueryMode.insensitive } },
+            { name: { equals: data.identifier, mode: Prisma.QueryMode.insensitive } },
+        ],
+    };
     const user = await prisma.user.findFirst({ where: whereClause });
     if (!user) throw createHttpError(401, "Invalid credentials");
 

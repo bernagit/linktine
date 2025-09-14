@@ -6,7 +6,7 @@ import { env } from "../config/env";
 export default async function requireAuth(req: Request, res: Response, next: NextFunction) {
     try {
         // Check for token in Authorization header or cookies
-        const cookieToken = req.cookies.token;
+        const cookieToken = req.cookies.auth_token;
         const authHeader = req.headers.authorization;
         if (!authHeader?.startsWith("Bearer ") && !cookieToken) {
             return res.status(401).json({ message: "Unauthorized" });
