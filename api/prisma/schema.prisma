@@ -63,6 +63,7 @@ model Link {
 model Tag {
   id        String    @id @default(cuid())
   name      String    @unique
+  color     String?   @default("#868e96")
   links     LinkTag[]
   createdAt DateTime  @default(now())
 }
@@ -79,6 +80,7 @@ model Collection {
   id          String       @id @default(cuid())
   name        String
   description String?
+  color       String?      @default("#868e96")
   user        User         @relation(fields: [userId], references: [id])
   userId      String
   parent      Collection?  @relation("children", fields: [parentId], references: [id])

@@ -1,0 +1,21 @@
+meta {
+  name: update
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{base_url}}/collections/cmfmzgzp20006uyzmilw8bzzj
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "color": "#1971c2"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

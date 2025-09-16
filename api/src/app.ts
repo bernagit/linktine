@@ -9,6 +9,9 @@ import cookieParser from "cookie-parser";
 import linksRouter from "./routes/link.route";
 import authRouter from "./routes/auth.route";
 import collectionsRouter from "./routes/collection.route";
+import tagsRouter from "./routes/tag.route";
+import sharedLinksRouter from "./routes/sharedLink.route";
+import sharedCollectionsRouter from "./routes/sharedCollection.route";
 import errorHandler from "./middlewares/error";
 import notFoundHandler from "./middlewares/not-found";
 
@@ -30,6 +33,9 @@ app.get("/healthz", (_req, res) => res.json({ ok: true }));
 app.use("/api/v1/links", linksRouter);
 app.use("/api/v1/collections", collectionsRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/tags", tagsRouter); 
+app.use("/api/v1/sharedLinks", sharedLinksRouter);
+app.use("/api/v1/sharedCollections", sharedCollectionsRouter);
 
 // 404 handler
 app.use(notFoundHandler);
