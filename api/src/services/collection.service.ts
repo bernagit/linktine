@@ -22,7 +22,7 @@ interface UpdateCollectionInput {
 const read = async (id: string, userId: string) => {
     return prisma.collection.findUnique({
         where: { id },
-        include: { children: true, links: true },
+        include: { children: true, links: true, user: { select: { id: true, email: true, name: true } } },
     }).then(col => col && col.userId === userId ? col : null);
 };
 
@@ -55,7 +55,10 @@ const list = async (userId: string, filters: any, pagination: { page: number; li
     const [data, total] = await Promise.all([
         prisma.collection.findMany({
             where,
-            include: { children: true, links: true },
+            include: { 
+                children: true,
+                _count: { select: { links: true, children: true } }
+            },
             orderBy: { createdAt: "desc" },
             skip: (page - 1) * limit,
             take: limit,
@@ -67,7 +70,11 @@ const list = async (userId: string, filters: any, pagination: { page: number; li
 };
 
 const update = async (input: UpdateCollectionInput) => {
+    // Ensure it belongs to the user before updating
     const { id, userId, data } = input;
+    const collection = await prisma.collection.findUnique({ where: { id } });
+    if (!collection || collection.userId !== userId) throw new Error("Forbidden");
+    
     return prisma.collection.update({
         where: { id },
         data: {

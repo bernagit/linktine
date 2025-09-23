@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
 
 import { ColorSchemeScript, MantineProvider, createTheme, mantineHtmlProps } from "@mantine/core";
-import "@mantine/core/styles.css";
-import "@mantine/notifications/styles.css";
 import { Notifications } from "@mantine/notifications";
+import AppLayout from "@/components/layouts/AppLayout";
+import { ContextMenuProvider } from "mantine-contextmenu";
+import "@mantine/notifications/styles.css";
+import "@mantine/core/styles.layer.css";
+import "mantine-contextmenu/styles.layer.css";
+import "./layout.css";
 
 export const metadata: Metadata = {
     title: "Link manager",
@@ -15,10 +19,10 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-
     const theme = createTheme({
         primaryColor: "teal",
-    })
+        defaultRadius: "md",
+    });
 
     return (
         <html lang="en" {...mantineHtmlProps}>
@@ -28,7 +32,9 @@ export default function RootLayout({
             <body>
                 <MantineProvider defaultColorScheme="auto" theme={theme}>
                     <Notifications />
-                    {children}
+                    <AppLayout>
+                        <ContextMenuProvider>{children}</ContextMenuProvider>
+                    </AppLayout>
                 </MantineProvider>
             </body>
         </html>

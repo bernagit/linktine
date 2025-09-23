@@ -12,6 +12,8 @@ import {
     Group,
     Stack,
     Anchor,
+    Loader,
+    Center,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { upperFirst, useToggle } from "@mantine/hooks";
@@ -23,7 +25,7 @@ import { FaX } from "react-icons/fa6";
 
 export default function LoginPage() {
     const [type, toggle] = useToggle(["login", "register"]);
-
+    const [isLoading, setIsLoading] = useState(false);
     const xIcon = useMemo(() => <FaX />, []);
 
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -47,6 +49,7 @@ export default function LoginPage() {
 
     const handleSubmit = useCallback(async () => {
         setErrorMessage(null);
+        setIsLoading(true);
         const endpoint = type === "login" ? "auth/login" : "auth/register";
         const payload =
             type === "login"
@@ -58,8 +61,8 @@ export default function LoginPage() {
                   };
 
         try {
-            const response = await api.post<LoginSuccess>(endpoint, { json: payload }).json();
-            router.push(`/?id=${response.user.id}`);
+            await api.post<LoginSuccess>(endpoint, { json: payload }).json();
+            router.push(`/`);
         } catch (error) {
             console.log("Error:", error);
             if (error instanceof HTTPError) {
@@ -74,6 +77,16 @@ export default function LoginPage() {
             }
         }
     }, [type, form.values, router, xIcon]);
+
+    if (isLoading) {
+        return (
+            <Container size="xs" py="xl" mt="40vh">
+                <Center>
+                    <Loader size="xl" variant="dots" />
+                </Center>
+            </Container>
+        );
+    }
 
     return (
         <Container size="xs" py="xl">
@@ -132,10 +145,7 @@ export default function LoginPage() {
                                 onChange={(event) =>
                                     form.setFieldValue("confirmPassword", event.currentTarget.value)
                                 }
-                                error={
-                                    form.errors.confirmPassword &&
-                                    "Passwords do not match"
-                                }
+                                error={form.errors.confirmPassword && "Passwords do not match"}
                                 radius="md"
                             />
                         )}

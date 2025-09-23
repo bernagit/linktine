@@ -14,6 +14,7 @@ router.use(requireAuth);
 
 router.post("/", validate(createCollectionSchema), collectionsController.create);
 router.get("/", validate(getCollectionsQuerySchema), collectionsController.list);
+router.get("/:id", collectionsController.get);
 router.put("/:id", validate(updateCollectionSchema), collectionsController.update);
 router.delete("/:id", collectionsController.remove);
 

@@ -102,6 +102,20 @@ async function main() {
         },
     });
 
+    const mantineLink = await prisma.link.create({
+        data: {
+            url: "https://mantine.dev/",
+            title: "Mantine components",
+            description: "test",
+            domain: "mantine.dev",
+            userId: admin.id,
+            collectionId: personal.id,
+            tags: {
+                create: [{ tag: { connect: {id: tagNews.id } } }],
+            }
+        }
+    })
+
     console.log("Database seeded with:");
     console.log({
         user: admin,

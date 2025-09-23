@@ -12,6 +12,7 @@ import collectionsRouter from "./routes/collection.route";
 import tagsRouter from "./routes/tag.route";
 import sharedLinksRouter from "./routes/sharedLink.route";
 import sharedCollectionsRouter from "./routes/sharedCollection.route";
+import dashboardRouter from "./routes/dashboard.route";
 import errorHandler from "./middlewares/error";
 import notFoundHandler from "./middlewares/not-found";
 
@@ -36,6 +37,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/tags", tagsRouter); 
 app.use("/api/v1/sharedLinks", sharedLinksRouter);
 app.use("/api/v1/sharedCollections", sharedCollectionsRouter);
+app.use("/api/v1/dashboard", dashboardRouter);
 
 // 404 handler
 app.use(notFoundHandler);
