@@ -52,6 +52,6 @@ const changePwd = async (req: Request, res: Response) => {
     const result = await authService.changePwd(req.user!.id, { currentPassword, newPassword });
 
     res.json(result);
-}
+};
 
 export { register, login, logout, getMe, updateMe, changePwd };

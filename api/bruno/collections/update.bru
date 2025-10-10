@@ -5,14 +5,18 @@ meta {
 }
 
 put {
-  url: {{base_url}}/collections/cmftio4fl0006uy8h8buvmq0i
+  url: {{base_url}}/collections/:id
   body: json
   auth: inherit
 }
 
+params:path {
+  id: cmftio4fh0004uy8h8cvtddf
+}
+
 body:json {
   {
-    "color": "#1971c2"
+    "parentId": "cmftio4fl0006uy8h8buvmq0i"
   }
 }
 

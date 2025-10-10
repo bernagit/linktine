@@ -5,9 +5,13 @@ meta {
 }
 
 delete {
-  url: {{base_url}}/links/{link_id}
+  url: {{base_url}}/links/:id
   body: none
   auth: inherit
+}
+
+params:path {
+  id: cmftio4gh000huy8htxiu0umd
 }
 
 settings {

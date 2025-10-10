@@ -26,8 +26,8 @@ export const changePwdSchema = z.object({
     body: z.object({
         currentPassword: z.string().min(8, "Password must be at least 8 characters"),
         newPassword: z.string().min(8, "Password must be at least 8 characters"),
-    })
-})
+    }),
+});
 
 export type RegisterInput = z.infer<typeof registerSchema>["body"];
 export type LoginInput = z.infer<typeof loginSchema>["body"];

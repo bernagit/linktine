@@ -5,7 +5,7 @@ export async function fetchMetadata(url: string) {
     try {
         const resp = await axios.get(url, {
             timeout: 5000,
-            headers: { "User-Agent": "link-manager" },
+            headers: { "User-Agent": "LinkTine" },
         });
         const html = resp.data;
         const $ = cheerio.load(html);

@@ -107,7 +107,7 @@ const update = async (input: UpdateLinkInput) => {
             ...meta,
             tags: data.tags
                 ? {
-                      deleteMany: {}, // remove old
+                      deleteMany: {}, // remove existing tags
                       create: data.tags.map((t) => ({
                           tag: { connectOrCreate: { where: { name: t }, create: { name: t } } },
                       })),
@@ -121,6 +121,7 @@ const update = async (input: UpdateLinkInput) => {
 };
 
 const remove = async (id: string, userId: string) => {
+    await prisma.linkTag.deleteMany({ where: { linkId: id } });
     await prisma.link.delete({ where: { id_userId: { id, userId } } });
 };
 

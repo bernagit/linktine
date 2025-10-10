@@ -10,11 +10,11 @@ const create = async (req: Request, res: Response) => {
 const get = async (req: Request, res: Response) => {
     const userId = req.user!.id;
     const { id } = req.params;
-    
+
     const collection = await collectionsService.read(id, userId);
     if (!collection) return res.status(404).json({ message: "Collection not found" });
     res.json(collection);
-}
+};
 
 const list = async (req: Request, res: Response) => {
     const userId = req.user!.id;

@@ -111,10 +111,10 @@ async function main() {
             userId: admin.id,
             collectionId: personal.id,
             tags: {
-                create: [{ tag: { connect: {id: tagNews.id } } }],
-            }
-        }
-    })
+                create: [{ tag: { connect: { id: tagNews.id } } }],
+            },
+        },
+    });
 
     console.log("Database seeded with:");
     console.log({

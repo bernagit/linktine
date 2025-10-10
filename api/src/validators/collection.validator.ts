@@ -5,7 +5,10 @@ export const createCollectionSchema = z.object({
         name: z.string().min(1),
         description: z.string().optional(),
         parentId: z.string().optional().nullable(),
-        color: z.string().regex(/^#?([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/).optional(),
+        color: z
+            .string()
+            .regex(/^#?([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/)
+            .optional(),
     }),
 });
 
@@ -17,7 +20,11 @@ export const updateCollectionSchema = z.object({
         name: z.string().min(1).optional(),
         description: z.string().optional().nullable(),
         parentId: z.string().optional().nullable(),
-        color: z.string().regex(/^#?([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/).optional().nullable(),
+        color: z
+            .string()
+            .regex(/^#?([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/)
+            .optional()
+            .nullable(),
     }),
 });
 

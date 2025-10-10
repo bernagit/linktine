@@ -20,10 +20,28 @@ interface UpdateCollectionInput {
 }
 
 const read = async (id: string, userId: string) => {
-    return prisma.collection.findUnique({
-        where: { id },
-        include: { children: true, links: true, user: { select: { id: true, email: true, name: true } } },
-    }).then(col => col && col.userId === userId ? col : null);
+    return prisma.collection
+        .findUnique({
+            where: { id },
+            include: {
+                children: {
+                    select: {
+                        id: true,
+                        name: true,
+                        description: true,
+                        color: true,
+                        parentId: true,
+                        createdAt: true,
+                        updatedAt: true,
+                        userId: true,
+                        _count: { select: { links: true, children: true } },
+                    },
+                },
+                links: true,
+                _count: { select: { links: true, children: true } },
+            },
+        })
+        .then((col) => (col && col.userId === userId ? col : null));
 };
 
 const create = async (input: CreateCollectionInput) => {
@@ -55,9 +73,22 @@ const list = async (userId: string, filters: any, pagination: { page: number; li
     const [data, total] = await Promise.all([
         prisma.collection.findMany({
             where,
-            include: { 
-                children: true,
-                _count: { select: { links: true, children: true } }
+            include: {
+                children: {
+                    select: {
+                        id: true,
+                        name: true,
+                        description: true,
+                        color: true,
+                        parentId: true,
+                        createdAt: true,
+                        updatedAt: true,
+                        userId: true,
+                        _count: { select: { links: true, children: true } },
+                    },
+                },
+                links: true,
+                _count: { select: { links: true, children: true } },
             },
             orderBy: { createdAt: "desc" },
             skip: (page - 1) * limit,
@@ -74,7 +105,7 @@ const update = async (input: UpdateCollectionInput) => {
     const { id, userId, data } = input;
     const collection = await prisma.collection.findUnique({ where: { id } });
     if (!collection || collection.userId !== userId) throw new Error("Forbidden");
-    
+
     return prisma.collection.update({
         where: { id },
         data: {

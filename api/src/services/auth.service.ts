@@ -70,7 +70,8 @@ export async function changePwd(userId: string, data: ChangePwdInput) {
 
     // Prevent reusing the same password
     const sameAsOld = await bcrypt.compare(data.newPassword, user.password);
-    if (sameAsOld) throw createHttpError(400, "New password must be different from the current password");
+    if (sameAsOld)
+        throw createHttpError(400, "New password must be different from the current password");
 
     const hashedPassword = await bcrypt.hash(data.newPassword, 10);
 
@@ -81,4 +82,3 @@ export async function changePwd(userId: string, data: ChangePwdInput) {
 
     return { message: "Password changed successfully" };
 }
-
