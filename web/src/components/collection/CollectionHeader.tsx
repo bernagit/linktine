@@ -1,17 +1,6 @@
 "use client";
 
-import {
-    Card,
-    Group,
-    Title,
-    Text,
-    Popover,
-    ColorPicker,
-    Button,
-    Stack,
-    ActionIcon,
-    Divider,
-} from "@mantine/core";
+import { Group, Title, Text, Popover, ColorPicker, Button, Stack, ActionIcon } from "@mantine/core";
 import { FaFolder } from "react-icons/fa6";
 import { useCallback, useState } from "react";
 import { Collection } from "@/models/collection";
@@ -43,8 +32,7 @@ export default function CollectionHeader({ collection, updateCollectionColor, sa
     };
 
     return (
-        <Card radius="sm" p="lg" withBorder>
-            {/* Title Row */}
+        <>
             <Group justify="space-between" align="center" mb="sm">
                 <Group gap="sm" align="center">
                     <Popover
@@ -99,13 +87,11 @@ export default function CollectionHeader({ collection, updateCollectionColor, sa
                         </Popover.Dropdown>
                     </Popover>
 
-                    <Title order={2}>{collection.name}</Title>
+                    <Title mt={"xs"} order={2}>
+                        {collection.name}
+                    </Title>
                 </Group>
             </Group>
-
-            <Divider my="sm" />
-
-            {/* Meta Info */}
             <Group justify="space-between" align="flex-start">
                 {collection.description && (
                     <Text size="sm" c="dimmed" style={{ maxWidth: "70%" }}>
@@ -122,6 +108,6 @@ export default function CollectionHeader({ collection, updateCollectionColor, sa
                     </Text>
                 </Stack>
             </Group>
-        </Card>
+        </>
     );
 }

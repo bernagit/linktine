@@ -1,9 +1,9 @@
 "use client";
 
 import { Collection } from "@/models/collection";
-import api from "@/utils/ky";
 import { useEffect } from "react";
 import { useCollectionsStore } from "@/stores/useCollectionsStore";
+import { collectionsService } from "@/services/collections";
 
 function buildTree(collections: Collection[]): Collection[] {
     const map = new Map<string, Collection>();
@@ -26,8 +26,8 @@ export function useCollections() {
     const { collections, setCollections } = useCollectionsStore();
 
     useEffect(() => {
-        api.get("collections")
-            .json<{ data: Collection[] }>()
+        collectionsService
+            .getAll()
             .then((res) => {
                 if (Array.isArray(res.data)) {
                     setCollections(res.data);

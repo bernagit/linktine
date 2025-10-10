@@ -1,7 +1,7 @@
 "use client";
 
-import { ApiError, LoginSuccess } from "@/models/shared";
-import api from "@/utils/ky";
+import { ApiError } from "@/models/shared";
+import { authService } from "@/services/base";
 import {
     TextInput,
     PasswordInput,
@@ -50,18 +50,17 @@ export default function LoginPage() {
     const handleSubmit = useCallback(async () => {
         setErrorMessage(null);
         setIsLoading(true);
-        const endpoint = type === "login" ? "auth/login" : "auth/register";
-        const payload =
-            type === "login"
-                ? { identifier: form.values.identifier, password: form.values.password }
-                : {
-                      name: form.values.name,
-                      email: form.values.identifier,
-                      password: form.values.password,
-                  };
-
+        const login = type === "login";
         try {
-            await api.post<LoginSuccess>(endpoint, { json: payload }).json();
+            if (login) {
+                await authService.login(form.values.identifier, form.values.password);
+            } else {
+                await authService.register(
+                    form.values.name,
+                    form.values.identifier,
+                    form.values.password
+                );
+            }
             router.push(`/`);
         } catch (error) {
             console.log("Error:", error);
@@ -75,6 +74,9 @@ export default function LoginPage() {
                     icon: xIcon,
                 });
             }
+        }
+        finally {
+            setIsLoading(false);
         }
     }, [type, form.values, router, xIcon]);
 
@@ -92,7 +94,7 @@ export default function LoginPage() {
         <Container size="xs" py="xl">
             <Paper radius="md" p="lg" withBorder>
                 <Text size="lg" fw={500} mb={50}>
-                    Welcome to Link Manager
+                    Welcome to LinkTine
                 </Text>
 
                 <form onSubmit={form.onSubmit(() => handleSubmit())}>

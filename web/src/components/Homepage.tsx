@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import api from "@/utils/ky";
 import {
     Stack,
     Paper,
@@ -12,18 +11,35 @@ import {
     ScrollArea,
     Title,
     Grid,
+    useMantineTheme,
 } from "@mantine/core";
 import { FaLink, FaFolder, FaTags, FaStar, FaHistory } from "react-icons/fa";
 import { DashboardData } from "@/models/shared";
+import { nameToColor } from "@/utils/color";
+import { baseService } from "@/services/base";
 
-function StatsCard({ icon: Icon, label, value }: { icon: React.ElementType; label: string; value: number }) {
+function StatsCard({
+    icon: Icon,
+    label,
+    value,
+    color,
+}: {
+    icon: React.ElementType;
+    label: string;
+    value: number;
+    color: string;
+}) {
     return (
         <Paper p="sm" shadow="sm" withBorder radius="md">
-            <Group style={{ justifyContent: "space-between", alignItems: "center" }}>
-                <Icon size={20} />
-                <Text style={{ fontWeight: 700, fontSize: 18 }}>{value}</Text>
+            <Group align="center" justify="space-between">
+                <Icon size={20} color={color} />
+                <Text size="lg" style={{ fontWeight: 700 }}>
+                    {value}
+                </Text>
             </Group>
-            <Text style={{ color: "gray", fontSize: 12, marginTop: 4 }}>{label}</Text>
+            <Text size="sm" c="dimmed" mt={4}>
+                {label}
+            </Text>
         </Paper>
     );
 }
@@ -31,11 +47,12 @@ function StatsCard({ icon: Icon, label, value }: { icon: React.ElementType; labe
 export default function Homepage() {
     const [data, setData] = useState<DashboardData | null>(null);
     const [loading, setLoading] = useState(true);
+    const theme = useMantineTheme();
 
     useEffect(() => {
         async function fetchDashboard() {
             try {
-                const response = await api.get<DashboardData>("dashboard").json();
+                const response = await baseService.getDashboard();
                 setData(response);
             } catch (err) {
                 console.error(err);
@@ -46,18 +63,35 @@ export default function Homepage() {
         fetchDashboard();
     }, []);
 
-    const statItems = useMemo(
-        () => {
-            if (!data) return [];
-            return [
-                { icon: FaLink, label: "Total Links", value: data.stats.totalLinks },
-                { icon: FaFolder, label: "Collections", value: data.stats.totalCollections },
-                { icon: FaStar, label: "Favorites", value: data.stats.favoriteLinks },
-                { icon: FaTags, label: "Tags", value: data.stats.totalTags },
-            ]
-        },
-        [data]
-    );
+    const statItems = useMemo(() => {
+        if (!data) return [];
+        return [
+            {
+                icon: FaLink,
+                label: "Total Links",
+                value: data.stats.totalLinks,
+                color: nameToColor(theme, "links"),
+            },
+            {
+                icon: FaFolder,
+                label: "Collections",
+                value: data.stats.totalCollections,
+                color: nameToColor(theme, "collections"),
+            },
+            {
+                icon: FaStar,
+                label: "Favorites",
+                value: data.stats.favoriteLinks,
+                color: nameToColor(theme, "favorites"),
+            },
+            {
+                icon: FaTags,
+                label: "Tags",
+                value: data.stats.totalTags,
+                color: nameToColor(theme, "tags"),
+            },
+        ];
+    }, [data, theme]);
 
     if (loading)
         return (
@@ -76,9 +110,9 @@ export default function Homepage() {
     return (
         <Stack p="sm" gap="lg">
             <Grid>
-                {statItems.map(({ icon: Icon, label, value }) => (
+                {statItems.map(({ icon: Icon, label, value, color }) => (
                     <Grid.Col span={{ base: 12, sm: 6, md: 3 }} key={label}>
-                        <StatsCard icon={Icon} label={label} value={value} />
+                        <StatsCard icon={Icon} label={label} value={value} color={color} />
                     </Grid.Col>
                 ))}
             </Grid>
@@ -91,7 +125,7 @@ export default function Homepage() {
                         Recent Links
                     </Group>
                 </Title>
-                <ScrollArea h={200} mah={200}>
+                <ScrollArea.Autosize mih={"20vh"} mah={"40vh"}>
                     <Stack gap="xs">
                         {data.recentLinks.map((link) => (
                             <Paper key={link.id} p="sm" radius="md" withBorder>
@@ -102,7 +136,7 @@ export default function Homepage() {
                             </Paper>
                         ))}
                     </Stack>
-                </ScrollArea>
+                </ScrollArea.Autosize>
             </Paper>
 
             {/* Recent Collections */}

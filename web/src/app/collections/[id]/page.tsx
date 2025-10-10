@@ -1,28 +1,24 @@
 "use client";
 
-import { Stack, Group, Loader, Text } from "@mantine/core";
+import { Group, Loader, Text, Card } from "@mantine/core";
 import { use, useCallback, useEffect, useState } from "react";
 import { useCollectionsStore } from "@/stores/useCollectionsStore";
-import api from "@/utils/ky";
-import { Collection } from "@/models/collection";
-
 import CollectionHeader from "@/components/collection/CollectionHeader";
 import CollectionLinks from "@/components/collection/CollectionLinks";
 import CollectionChildren from "@/components/collection/CollectionChildren";
-import CollectionViewToggle from "@/components/collection/CollectionViewToggle";
+import { collectionsService } from "@/services/collections";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
     const collection = useCollectionsStore((s) => s.collections[id]);
     const [loading, setLoading] = useState(true);
-    const [viewMode, setViewMode] = useState<"list" | "grid">("list");
     const { updateCollection, setCollection } = useCollectionsStore();
 
     useEffect(() => {
         async function fetchCollection() {
             if (!id) return;
             try {
-                const response = await api.get(`collections/${id}`).json<Collection>();
+                const response = await collectionsService.getById(id);
                 setCollection(response);
             } finally {
                 setLoading(false);
@@ -34,11 +30,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     const saveCollectionColor = useCallback(async () => {
         if (!collection) return;
         try {
-            const response = await api
-                .put<Collection>(`collections/${collection.id}`, {
-                    json: { color: collection.color },
-                })
-                .json();
+            const response = await collectionsService.update(collection.id, {
+                color: collection.color,
+            });
             updateCollection(collection.id, response);
         } catch (error) {
             console.error("Failed to save collection color:", error);
@@ -64,15 +58,24 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         );
 
     return (
-        <Stack gap="lg" p="sm" m={0}>
-            <CollectionHeader
-                collection={collection}
-                updateCollectionColor={updateColor}
-                saveColor={saveCollectionColor}
-            />
-            <CollectionChildren childrenCollections={collection.children} />
-            <CollectionViewToggle viewMode={viewMode} setViewMode={setViewMode} />
-            <CollectionLinks collection={collection} viewMode={viewMode} />
-        </Stack>
+        <Card p={20} m={10}>
+            <Card.Section withBorder inheritPadding py="xs" mb="md">
+                <CollectionHeader
+                    collection={collection}
+                    updateCollectionColor={updateColor}
+                    saveColor={saveCollectionColor}
+                />
+            </Card.Section>
+            {collection.children && collection.children.length > 0 && (
+                <Card.Section withBorder inheritPadding py="xs" mb="md">
+                    <CollectionChildren childrenCollections={collection.children} />
+                </Card.Section>
+            )}
+            {collection.links && collection.links.length > 0 && (
+                <Card.Section withBorder inheritPadding py="xs" mb="md">
+                    <CollectionLinks collection={collection} />
+                </Card.Section>
+            )}
+        </Card>
     );
 }

@@ -2,8 +2,8 @@ import Homepage from "@/components/Homepage";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Home - Link Manager",
-    description: "Welcome to the Link Manager homepage.",
+    title: "Home - LinkTine",
+    description: "Welcome to the LinkTine homepage.",
 };
 
 export default function HomePage() {

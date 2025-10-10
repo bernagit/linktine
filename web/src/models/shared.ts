@@ -2,6 +2,13 @@ export interface ApiError {
     message: string;
 }
 
+export interface ListResponse<T> {
+    data: T[];
+    total: number;
+    page: number;
+    pageSize: number;
+}
+
 export interface User {
     id: string;
     name: string;
@@ -13,7 +20,6 @@ export interface LoginSuccess {
     user: User;
     token: string;
 }
-
 
 export interface DashboardStats {
     totalLinks: number;
@@ -51,4 +57,23 @@ export interface DashboardData {
     recentLinks: RecentLink[];
     recentCollections: RecentCollection[];
     topTags: TopTag[];
+}
+
+export interface SearchData {
+    links?: {
+        id: string;
+        title: string;
+        url: string;
+        description?: string;
+    }[];
+    collections?: {
+        id: string;
+        name: string;
+        color?: string;
+    }[];
+    tags?: {
+        id: string;
+        name: string;
+        color?: string;
+    }[];
 }

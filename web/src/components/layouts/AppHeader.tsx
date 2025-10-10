@@ -1,6 +1,6 @@
 "use client";
 
-import api from "@/utils/ky";
+import { authService } from "@/services/base";
 import {
     ActionIcon,
     Avatar,
@@ -8,12 +8,9 @@ import {
     Container,
     Group,
     Menu,
-    Modal,
-    rem,
-    TextInput,
     useMantineColorScheme,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { spotlight } from "@mantine/spotlight";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { FaHome, FaMoon, FaSearch, FaSun, FaUser } from "react-icons/fa";
@@ -28,10 +25,8 @@ type AppHeaderProps = {
 export default function AppHeader({ opened, toggle, closeBurger }: AppHeaderProps) {
     const router = useRouter();
     const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-    const [searchValue, setSearchValue] = useState("");
-    const [searchOpened, { open: openSearch, close: closeSearch }] = useDisclosure();
     const [mounted, setMounted] = useState(false);
-    
+
     useEffect(() => {
         setMounted(true);
     }, []);
@@ -42,7 +37,7 @@ export default function AppHeader({ opened, toggle, closeBurger }: AppHeaderProp
     };
 
     const handleLogout = useCallback(async () => {
-        await api.post("auth/logout");
+        await authService.logout();
         router.push("/login");
     }, [router]);
     return (
@@ -64,25 +59,12 @@ export default function AppHeader({ opened, toggle, closeBurger }: AppHeaderProp
                         </ActionIcon>
                     </Group>
 
-                    <Group visibleFrom="md">
-                        <TextInput
-                            placeholder="Search..."
-                            leftSection={<FaSearch size={16} />}
-                            radius="md"
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.currentTarget.value)}
-                            w={rem(300)}
-                            maw="40vw"
-                        />
-                    </Group>
-
                     <Group gap="sm">
                         <ActionIcon
                             variant="subtle"
                             radius="xl"
                             size="lg"
-                            onClick={openSearch}
-                            hiddenFrom="md"
+                            onClick={() => spotlight.open()}
                         >
                             <FaSearch size={16} />
                         </ActionIcon>
@@ -124,17 +106,6 @@ export default function AppHeader({ opened, toggle, closeBurger }: AppHeaderProp
                     </Group>
                 </Group>
             </Container>
-            <Modal opened={searchOpened} onClose={closeSearch} title="Search" size="lg" centered>
-                <TextInput
-                    placeholder="Search..."
-                    leftSection={<FaSearch size={16} />}
-                    radius="md"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.currentTarget.value)}
-                    size="md"
-                    autoFocus
-                />
-            </Modal>
         </>
     );
 }

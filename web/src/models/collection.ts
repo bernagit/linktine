@@ -10,7 +10,7 @@ export interface Collection {
     userId: string;
     createdAt: string;
     updatedAt: string;
-    _count?: {
+    _count: {
         links: number;
         children: number;
     };

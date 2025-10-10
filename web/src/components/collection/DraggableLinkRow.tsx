@@ -1,13 +1,11 @@
 "use client";
 
-import { Table, Anchor, Badge, Group } from "@mantine/core";
+import { Table, Anchor, Badge, Group, Image } from "@mantine/core";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { Collection } from "@/models/collection";
+import { Link } from "@/models/link";
 
-type LinkType = NonNullable<Collection["links"]>[number];
-
-export default function DraggableLinkRow({ link }: { link: LinkType }) {
+export default function DraggableLinkRow({ link }: { link: Link }) {
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: `link-${link.id}`,
         data: { type: "link", link },
@@ -24,6 +22,14 @@ export default function DraggableLinkRow({ link }: { link: LinkType }) {
 
     return (
         <Table.Tr ref={setNodeRef} style={style} {...listeners} {...attributes}>
+            <Table.Td>
+                <Image
+                    src={link.thumbnail ?? "/url-thumbnail.png"}
+                    alt="Thumbnail"
+                    w={40}
+                    fit="contain"
+                />
+            </Table.Td>
             <Table.Td>
                 <Anchor href={link.url} target="_blank">
                     {link.title ?? link.url}

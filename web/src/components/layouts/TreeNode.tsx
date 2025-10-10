@@ -73,9 +73,7 @@ export default function TreeNode({
                         />
                     </span>
 
-                    <Text fw={isActive ? 500 : 400}>
-                        {collection.name}
-                    </Text>
+                    <Text fw={isActive ? 500 : 400}>{collection.name}</Text>
                     <Text size="xs" c="dimmed">
                         {count}
                     </Text>
@@ -90,8 +88,8 @@ export default function TreeNode({
                 backgroundColor: isActive
                     ? hexToRgba(theme.colors.teal[6], 0.15) // active background
                     : isOver
-                        ? hexToRgba(theme.colors.teal[2], 0.12) // drag over
-                        : "transparent",
+                      ? hexToRgba(theme.colors.teal[2], 0.12) // drag over background
+                      : "transparent",
                 border: isOver ? `1px dashed ${theme.colors.teal[4]}` : "1px solid transparent",
                 borderRadius: 6,
                 transition: "background-color 150ms ease, border 150ms ease",

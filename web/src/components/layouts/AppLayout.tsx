@@ -1,19 +1,29 @@
 "use client";
 
 import { AppShell } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDebouncedValue, useDisclosure } from "@mantine/hooks";
 import CollectionsNavbar from "./CollectionsNavbar";
 import { usePathname } from "next/navigation";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import CardNavbar from "./CardNavbar";
 import AppHeader from "./AppHeader";
+import { useCollectionsStore } from "@/stores/useCollectionsStore";
+import { Spotlight, SpotlightActionData } from "@mantine/spotlight";
+import { useEffect, useState } from "react";
+import { baseService } from "@/services/base";
+import { FaFolder, FaLink, FaTag } from "react-icons/fa";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const [opened, { toggle, close }] = useDisclosure();
+    const [query, setQuery] = useState<string>("");
+    const [debouncedQuery] = useDebouncedValue(query, 200);
+    const [actions, setActions] = useState<SpotlightActionData[]>([]);
 
     const pathname = usePathname();
 
     const skipLayout = pathname.startsWith("/login");
+
+    const { moveCollection } = useCollectionsStore();
 
     const handleDragEnd = (event: DragEndEvent) => {
         const { active, over } = event;
@@ -31,25 +41,64 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             console.log(`Dropped link "${link.title}" into collection "${collection.name}"`);
         }
 
-        // 2. Collections dropped into collections
         if (activeData.type === "collection" && overData.type === "collection") {
             const dragged = activeData.node;
             const target = overData.node;
 
             if (dragged.id !== target.id) {
-                console.log(`Move collection "${dragged.name}" into "${target.name}"`);
+                moveCollection(dragged.id, target.id);
             }
         }
 
+        // collections dropped into root
         if (activeData.type === "collection" && over.id === "collection-root") {
             const dragged = activeData.node;
-            console.log(`Move collection "${dragged.name}" to ROOT`);
+            moveCollection(dragged.id, null);
         }
     };
-    if (skipLayout) return <>{children}</>;
 
+    useEffect(() => {
+        (async () => {
+            if (debouncedQuery !== '') {
+                const response = await baseService.globalSearch(debouncedQuery);
+                const links: SpotlightActionData[] = response.links?.map((link) => ({
+                    id: link.id,
+                    label: link.title,
+                    description: link.url,
+                    onClick: () => {
+                        console.log("Go to link", link.id);
+                    },
+                    leftSection: <FaLink />,
+                })) ?? [];
+                const collections: SpotlightActionData[] = response.collections?.map((collection) => ({
+                    id: collection.id,
+                    label: collection.name,
+                    onClick: () => {
+                        console.log("Go to collection", collection.id);
+                    },
+                    leftSection: <FaFolder color={collection.color} />,
+                })) ?? [];
+                const tags: SpotlightActionData[] = response.tags?.map((tag) => ({
+                    id: tag.id,
+                    label: `#${tag.name}`,
+                    onClick: () => {
+                        console.log("Go to tag", tag.id);
+                    },
+                    leftSection: <FaTag color={tag.color} />,
+                })) ?? [];
+
+                setActions([...links, ...collections, ...tags]);
+            }
+        })();
+    }, [debouncedQuery]);
+
+
+    if (skipLayout) return <>{children}</>;
     return (
         <>
+            <Spotlight actions={actions} onQueryChange={setQuery} onSpotlightClose={() => setActions([])} >
+
+            </Spotlight>
             <DndContext onDragEnd={handleDragEnd}>
                 <AppShell
                     navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}

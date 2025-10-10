@@ -4,13 +4,14 @@ import { ColorSchemeScript, MantineProvider, createTheme, mantineHtmlProps } fro
 import { Notifications } from "@mantine/notifications";
 import AppLayout from "@/components/layouts/AppLayout";
 import { ContextMenuProvider } from "mantine-contextmenu";
-import "@mantine/notifications/styles.css";
 import "@mantine/core/styles.layer.css";
+import "@mantine/notifications/styles.css";
+import '@mantine/spotlight/styles.css';
 import "mantine-contextmenu/styles.layer.css";
 import "./layout.css";
 
 export const metadata: Metadata = {
-    title: "Link manager",
+    title: "LinkTine",
     description: "Manage your links with ease.",
 };
 
