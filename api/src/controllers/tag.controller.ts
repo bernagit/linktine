@@ -23,5 +23,14 @@ const remove = async (req: Request, res: Response) => {
     res.status(204).send();
 };
 
-const tagsController = { create, list, update, remove };
+const getSuggestions = async (req: Request, res: Response) => {
+    const { query } = req.query;
+    if (typeof query !== "string") {
+        return res.status(400).json({ message: "Query parameter 'query' is required and must be a string." });
+    }
+    const suggestions = await tagsService.getSuggestions(query);
+    res.json({ suggestions });
+};
+
+const tagsController = { create, list, update, remove, getSuggestions };
 export default tagsController;

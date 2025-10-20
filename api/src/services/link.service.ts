@@ -3,6 +3,7 @@ import { fetchMetadata } from "./metadata.service";
 
 interface CreateLinkInput {
     url: string;
+    name?: string;
     tags?: string[];
     collectionId?: string;
     note?: string;
@@ -33,12 +34,13 @@ const read = async (id: string, userId: string) => {
 };
 
 const create = async (input: CreateLinkInput) => {
-    const { url, tags = [], collectionId, note, read, userId } = input;
+    const { url, tags = [], collectionId, note, read, userId, name } = input;
     const meta = await fetchMetadata(url);
 
     const link = await prisma.link.create({
         data: {
             url,
+            name,
             title: meta.title,
             description: meta.description,
             thumbnail: meta.thumbnail,

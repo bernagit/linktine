@@ -19,5 +19,20 @@ const remove = async (id: string) => {
     await prisma.tag.delete({ where: { id } });
 };
 
-const tagsService = { create, list, update, remove };
+const getSuggestions = async (query: string) => {
+    const tags = await prisma.tag.findMany({
+        where: {
+            name: {
+                contains: query,
+                mode: "insensitive",
+            },
+        },
+        select: { id: true, name: true, color: true },
+        orderBy: { name: "asc" },
+        take: 5,
+    });
+    return tags;
+};
+
+const tagsService = { create, list, update, remove, getSuggestions };
 export default tagsService;

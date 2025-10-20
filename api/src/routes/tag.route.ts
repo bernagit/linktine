@@ -12,5 +12,6 @@ router.post("/", validate(createTagSchema), tagsController.create);
 router.get("/", tagsController.list);
 router.put("/:id", validate(updateTagSchema), tagsController.update);
 router.delete("/:id", tagsController.remove);
+router.get("/suggestions", tagsController.getSuggestions);
 
 export default router;

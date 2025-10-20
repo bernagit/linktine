@@ -5,8 +5,8 @@ export const createLinkSchema = z.object({
         url: z.url(),
         tags: z.array(z.string()).optional(),
         collectionId: z.string().optional(),
+        name: z.string().optional(),
         note: z.string().optional(),
-        read: z.boolean().optional(),
     }),
 });
 
