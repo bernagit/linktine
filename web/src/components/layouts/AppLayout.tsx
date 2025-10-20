@@ -12,6 +12,11 @@ import { Spotlight, SpotlightActionData } from "@mantine/spotlight";
 import { useEffect, useState } from "react";
 import { baseService } from "@/services/base";
 import { FaFolder, FaLink, FaTag } from "react-icons/fa";
+import { ModalsProvider } from "@mantine/modals";
+import AddLinkModal from "@/components/modals/AddLink";
+import AddCollectionModal from "@/components/modals/AddCollection";
+import ShortcutHelp from "../modals/ShortcutHelp";
+import { HotkeyProvider } from "./HotKeysProvider";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const [opened, { toggle, close }] = useDisclosure();
@@ -59,63 +64,75 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         (async () => {
-            if (debouncedQuery !== '') {
+            if (debouncedQuery !== "") {
                 const response = await baseService.globalSearch(debouncedQuery);
-                const links: SpotlightActionData[] = response.links?.map((link) => ({
-                    id: link.id,
-                    label: link.title,
-                    description: link.url,
-                    onClick: () => {
-                        console.log("Go to link", link.id);
-                    },
-                    leftSection: <FaLink />,
-                })) ?? [];
-                const collections: SpotlightActionData[] = response.collections?.map((collection) => ({
-                    id: collection.id,
-                    label: collection.name,
-                    onClick: () => {
-                        console.log("Go to collection", collection.id);
-                    },
-                    leftSection: <FaFolder color={collection.color} />,
-                })) ?? [];
-                const tags: SpotlightActionData[] = response.tags?.map((tag) => ({
-                    id: tag.id,
-                    label: `#${tag.name}`,
-                    onClick: () => {
-                        console.log("Go to tag", tag.id);
-                    },
-                    leftSection: <FaTag color={tag.color} />,
-                })) ?? [];
+                const links: SpotlightActionData[] =
+                    response.links?.map((link) => ({
+                        id: link.id,
+                        label: link.title,
+                        description: link.url,
+                        onClick: () => {
+                            console.log("Go to link", link.id);
+                        },
+                        leftSection: <FaLink />,
+                    })) ?? [];
+                const collections: SpotlightActionData[] =
+                    response.collections?.map((collection) => ({
+                        id: collection.id,
+                        label: collection.name,
+                        onClick: () => {
+                            console.log("Go to collection", collection.id);
+                        },
+                        leftSection: <FaFolder color={collection.color} />,
+                    })) ?? [];
+                const tags: SpotlightActionData[] =
+                    response.tags?.map((tag) => ({
+                        id: tag.id,
+                        label: `#${tag.name}`,
+                        onClick: () => {
+                            console.log("Go to tag", tag.id);
+                        },
+                        leftSection: <FaTag color={tag.color} />,
+                    })) ?? [];
 
                 setActions([...links, ...collections, ...tags]);
             }
         })();
     }, [debouncedQuery]);
 
-
     if (skipLayout) return <>{children}</>;
     return (
-        <>
-            <Spotlight actions={actions} onQueryChange={setQuery} onSpotlightClose={() => setActions([])} >
+        <HotkeyProvider>
+            <ModalsProvider
+                modals={{
+                    addLink: AddLinkModal,
+                    addCollection: AddCollectionModal,
+                    showHelp: ShortcutHelp,
+                }}
+            >
+                <Spotlight
+                    actions={actions}
+                    onQueryChange={setQuery}
+                    onSpotlightClose={() => setActions([])}
+                ></Spotlight>
+                <DndContext onDragEnd={handleDragEnd}>
+                    <AppShell
+                        navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}
+                        header={{ height: 60 }}
+                    >
+                        <AppShell.Header>
+                            <AppHeader opened={opened} toggle={toggle} closeBurger={close} />
+                        </AppShell.Header>
 
-            </Spotlight>
-            <DndContext onDragEnd={handleDragEnd}>
-                <AppShell
-                    navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}
-                    header={{ height: 60 }}
-                >
-                    <AppShell.Header>
-                        <AppHeader opened={opened} toggle={toggle} closeBurger={close} />
-                    </AppShell.Header>
+                        <AppShell.Navbar>
+                            <CardNavbar />
+                            <CollectionsNavbar closeBurger={close} />
+                        </AppShell.Navbar>
 
-                    <AppShell.Navbar>
-                        <CardNavbar />
-                        <CollectionsNavbar closeBurger={close} />
-                    </AppShell.Navbar>
-
-                    <AppShell.Main>{children}</AppShell.Main>
-                </AppShell>
-            </DndContext>
-        </>
+                        <AppShell.Main>{children}</AppShell.Main>
+                    </AppShell>
+                </DndContext>
+            </ModalsProvider>
+        </HotkeyProvider>
     );
 }

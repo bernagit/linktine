@@ -17,9 +17,11 @@ export default function CollectionLinks({ collection }: Props) {
     if (!collection.links || collection.links.length === 0) return null;
 
     return (
-        <Stack gap={'xs'}>
+        <Stack gap={"xs"}>
             <Group justify="space-between">
-                <Title order={3} mb="md">Links</Title>
+                <Title order={3} mb="md">
+                    Links
+                </Title>
                 <CollectionViewToggle viewMode={viewMode} setViewMode={setViewMode} />
             </Group>
             <Card withBorder shadow="xs" radius="md">

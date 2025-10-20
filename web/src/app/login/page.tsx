@@ -74,8 +74,7 @@ export default function LoginPage() {
                     icon: xIcon,
                 });
             }
-        }
-        finally {
+        } finally {
             setIsLoading(false);
         }
     }, [type, form.values, router, xIcon]);
