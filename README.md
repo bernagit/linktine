@@ -108,6 +108,7 @@ JWT_EXPIRES_IN=36000
 NODE_ENV=development
 BASE_URL=http://localhost:4000
 DISABLE_SIGNUP=false
+CORS_ORIGINS=http://localhost:3000
 ```
 
 #### Run migrations & seed database

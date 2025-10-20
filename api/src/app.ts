@@ -1,4 +1,3 @@
-// src/app.ts
 import "express-async-errors";
 import express from "express";
 import helmet from "helmet";
@@ -15,6 +14,7 @@ import sharedCollectionsRouter from "./routes/sharedCollection.route";
 import baseRouter from "./routes/base.route";
 import errorHandler from "./middlewares/error";
 import notFoundHandler from "./middlewares/not-found";
+import { env } from "./config/env";
 
 const app = express();
 
@@ -22,7 +22,7 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(
     cors({
-        origin: "http://localhost:3000",
+        origin: env.CORS_ORIGINS,
         credentials: true,
     })
 );

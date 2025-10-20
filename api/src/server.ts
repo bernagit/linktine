@@ -10,7 +10,7 @@ const server = app.listen(PORT, () => {
 });
 
 async function gracefulShutdown() {
-    console.log("⏳ Shutting down...");
+    console.log("Shutting down...");
     server.close(async () => {
         try {
             await prisma.$disconnect();
