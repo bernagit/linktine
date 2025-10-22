@@ -12,6 +12,7 @@ import tagsRouter from "./routes/tag.route";
 import sharedLinksRouter from "./routes/sharedLink.route";
 import sharedCollectionsRouter from "./routes/sharedCollection.route";
 import baseRouter from "./routes/base.route";
+import tokenRouter from "./routes/token.route";
 import errorHandler from "./middlewares/error";
 import notFoundHandler from "./middlewares/not-found";
 import { env } from "./config/env";
@@ -40,6 +41,7 @@ app.use("/api/v1/tags", tagsRouter);
 app.use("/api/v1/sharedLinks", sharedLinksRouter);
 app.use("/api/v1/sharedCollections", sharedCollectionsRouter);
 app.use("/api/v1/base", baseRouter);
+app.use("/api/v1/tokens", tokenRouter);
 
 // 404 handler
 app.use(notFoundHandler);

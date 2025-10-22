@@ -26,7 +26,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
     const pathname = usePathname();
 
-    const skipLayout = pathname.startsWith("/login");
+    const skipLayout = pathname.startsWith("/login") || pathname.startsWith("/profile");
 
     const { moveCollection } = useCollectionsStore();
 

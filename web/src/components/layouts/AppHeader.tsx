@@ -11,6 +11,7 @@ import {
     useMantineColorScheme,
 } from "@mantine/core";
 import { spotlight } from "@mantine/spotlight";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { FaHome, FaMoon, FaSearch, FaSun, FaUser } from "react-icons/fa";
@@ -93,7 +94,13 @@ export default function AppHeader({ opened, toggle, closeBurger }: AppHeaderProp
                             </Menu.Target>
 
                             <Menu.Dropdown>
-                                <Menu.Item leftSection={<MdPerson size={16} />}>Profile</Menu.Item>
+                                <Menu.Item
+                                    component={Link}
+                                    href="/profile"
+                                    leftSection={<MdPerson size={16} />}
+                                >
+                                    Profile
+                                </Menu.Item>
                                 <Menu.Item
                                     leftSection={<MdLogout size={16} />}
                                     color="red"

@@ -24,40 +24,41 @@ enum ShareAccess {
 }
 
 model User {
-  id          String    @id @default(cuid())
-  email       String    @unique
-  password    String
-  name        String
-  role        Role      @default(USER)
-  prefs       Json?
-  links       Link[]
-  collections Collection[]
-  sharedLinks      SharedLink[]
+  id                String            @id @default(cuid())
+  email             String            @unique
+  password          String
+  name              String
+  role              Role              @default(USER)
+  prefs             Json?
+  links             Link[]
+  collections       Collection[]
+  sharedLinks       SharedLink[]
   sharedCollections SharedCollection[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  apiTokens         ApiToken[]
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
 }
 
 model Link {
-  id          String     @id @default(cuid())
+  id          String      @id @default(cuid())
   url         String
   name        String?
   title       String?
   description String?
   thumbnail   String?
   domain      String?
-  read        Boolean    @default(false)
-  archived    Boolean    @default(false)
-  favorite    Boolean    @default(false)
+  read        Boolean     @default(false)
+  archived    Boolean     @default(false)
+  favorite    Boolean     @default(false)
   note        String?
-  user        User       @relation(fields: [userId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
   userId      String
   collection  Collection? @relation(fields: [collectionId], references: [id])
   collectionId String?
   tags        LinkTag[]
   shared      SharedLink[]
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
   @@unique([id, userId], name: "id_userId")
 }
 
@@ -115,4 +116,19 @@ model SharedCollection {
   access      ShareAccess @default(READ)
   expiresAt   DateTime?
   createdAt   DateTime    @default(now())
+}
+
+model ApiToken {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  user        User      @relation(fields: [userId], references: [id])
+  userId      String
+  tokenHash   String
+  expiresAt   DateTime?
+  lastUsedAt  DateTime?
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([tokenHash])
 }
