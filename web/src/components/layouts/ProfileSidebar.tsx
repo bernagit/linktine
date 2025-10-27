@@ -9,7 +9,7 @@ export default function ProfileSidebar() {
     const segments = useSelectedLayoutSegments();
 
     return (
-        <Flex w="250px" direction="column">
+        <Flex w="100%" direction="column">
             <NavLink
                 styles={{ root: { borderRadius: "4px" } }}
                 component={Link}

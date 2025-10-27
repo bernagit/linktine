@@ -116,7 +116,7 @@ export default function NewAuthTokenPage() {
                 </form>
             ) : (
                 <Flex direction="column" align="center" gap="xs">
-                    <Flex gap="xs" align="center">
+                    <Flex gap="xs" align="center" direction={{ base: "column", sm: "row" }}>
                         <Title order={4}>Your new token is</Title>
                         <CopyButton value={newToken} timeout={2000}>
                             {({ copied, copy }) => (
