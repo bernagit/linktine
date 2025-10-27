@@ -18,6 +18,7 @@ import { useState } from "react";
 import api from "@/utils/ky";
 import { QRCodeSVG } from "qrcode.react";
 import { AuthToken } from "@/models/token";
+import dayjs from "dayjs";
 
 export default function NewAuthTokenPage() {
     const newTokenForm = useForm({
@@ -39,10 +40,9 @@ export default function NewAuthTokenPage() {
 
     const submitToken = async (values: typeof newTokenForm.values) => {
         setIsSubmitting(true);
-
         try {
             const expiresAt =
-                values.expiresAt != null || values.expiresAt !== "" ? values.expiresAt : null;
+                values.expiresAt != null && values.expiresAt !== "" ? dayjs(values.expiresAt).toISOString() : null;
 
             const createdToken = await api
                 .post("tokens", {
@@ -91,6 +91,7 @@ export default function NewAuthTokenPage() {
 
                         <DateTimePicker
                             label="Expires at"
+                            highlightToday
                             key={newTokenForm.key("expiresAt")}
                             {...newTokenForm.getInputProps("expiresAt")}
                         />
@@ -125,11 +126,11 @@ export default function NewAuthTokenPage() {
                         <Text fw="bold">
                             This API token is generated once and will not be retrievable after you
                             close this window. Store it securely. If you lose it, you'll need to
-                            generate a new token.
+                            generate a new one.
                         </Text>
                     </Alert>
 
-                    <QRCodeSVG size={200} value={newToken} />
+                    <QRCodeSVG size={200} value={`${process.env.NEXT_PUBLIC_API_URL}|${newToken}`} />
                 </Flex>
             )}
         </Flex>

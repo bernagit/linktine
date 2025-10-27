@@ -13,6 +13,7 @@ export default function AuthTokensPage() {
     const [tokens, setTokens] = useState<AuthToken[]>([]);
 
     const getTokens = useCallback(async () => {
+        setIsLoading(true);
         try {
             const tokensResponse = await api.get("tokens").json<AuthToken[]>();
             setTokens(tokensResponse);
@@ -56,7 +57,7 @@ export default function AuthTokensPage() {
                         {tokens.map((token, i) => {
                             return (
                                 <Box key={i}>
-                                    <TokenCard authToken={token} />
+                                    <TokenCard authToken={token} onTokenDelete={getTokens} />
 
                                     {i !== tokens.length - 1 && <Divider my="xs" />}
                                 </Box>
