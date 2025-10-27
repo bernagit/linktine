@@ -26,7 +26,7 @@ export default function AuthTokensPage() {
 
     useEffect(() => {
         getTokens();
-    }, []);
+    }, [getTokens]);
 
     return (
         <Flex direction="column" gap="xs" w="100%">

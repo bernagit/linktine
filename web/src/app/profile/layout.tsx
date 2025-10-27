@@ -1,28 +1,37 @@
+"use client";
+
 import ProfileSidebar from "@/components/layouts/ProfileSidebar";
-import { ActionIcon, Avatar, Container, Flex, Space, Text, Title } from "@mantine/core";
+import { useUserStore } from "@/stores/useUserStore";
+import { ActionIcon, Avatar, Container, Flex, Loader, Space, Text, Title } from "@mantine/core";
 
 import "@mantine/dates/styles.css";
 import Link from "next/link";
 import { FaTimes } from "react-icons/fa";
-import { FaX } from "react-icons/fa6";
 
 export default function ProfileLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const { user, loading: isUserLoading } = useUserStore();
+
     return (
         <Container h="100vh" py="xl">
             <Flex justify="space-between">
                 <Flex align="center" gap="xs">
                     <Avatar size="lg" />
-
-                    <Flex direction="column">
-                        <Title order={3}>Username</Title>
-                        <Text size="sm" c="dimmed">
-                            email@gmail.com
-                        </Text>
-                    </Flex>
+                    {isUserLoading ? (
+                        <Flex>
+                            <Loader />
+                        </Flex>
+                    ) : (
+                        <Flex direction="column">
+                            <Title order={3}>{user?.name}</Title>
+                            <Text size="sm" c="dimmed">
+                                {user?.email}
+                            </Text>
+                        </Flex>
+                    )}
                 </Flex>
 
                 <ActionIcon size="xl" radius="xl" variant="subtle" component={Link} href="/">

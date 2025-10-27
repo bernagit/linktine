@@ -11,6 +11,7 @@ import {
     Title,
     Tooltip,
     Text,
+    ActionIcon,
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -19,6 +20,8 @@ import api from "@/utils/ky";
 import { QRCodeSVG } from "qrcode.react";
 import { AuthToken } from "@/models/token";
 import dayjs from "dayjs";
+import { BiLeftArrow } from "react-icons/bi";
+import Link from "next/link";
 
 export default function NewAuthTokenPage() {
     const newTokenForm = useForm({
@@ -42,7 +45,9 @@ export default function NewAuthTokenPage() {
         setIsSubmitting(true);
         try {
             const expiresAt =
-                values.expiresAt != null && values.expiresAt !== "" ? dayjs(values.expiresAt).toISOString() : null;
+                values.expiresAt != null && values.expiresAt !== ""
+                    ? dayjs(values.expiresAt).toISOString()
+                    : null;
 
             const createdToken = await api
                 .post("tokens", {
@@ -67,7 +72,12 @@ export default function NewAuthTokenPage() {
     return (
         <Flex direction="column" gap="xs" w="100%">
             <Flex justify="space-between">
-                <Title order={2}>Add new API token</Title>
+                <Flex gap="xs">
+                    <ActionIcon variant="subtle" component={Link} href="/profile/auth-tokens">
+                        <BiLeftArrow />
+                    </ActionIcon>
+                    <Title order={2}>Add new API token</Title>
+                </Flex>
             </Flex>
 
             <Divider />
@@ -94,6 +104,7 @@ export default function NewAuthTokenPage() {
                             highlightToday
                             key={newTokenForm.key("expiresAt")}
                             {...newTokenForm.getInputProps("expiresAt")}
+                            clearable
                         />
 
                         <Flex>
@@ -122,15 +133,23 @@ export default function NewAuthTokenPage() {
                         </CopyButton>
                     </Flex>
 
-                    <Alert title="Security Notice">
-                        <Text fw="bold">
+                    <Alert title="Security Notice" color="red">
+                        <Text>
                             This API token is generated once and will not be retrievable after you
-                            close this window. Store it securely. If you lose it, you'll need to
-                            generate a new one.
+                            close this window. Store it securely. If you lose it, you&apos;ll need
+                            to generate a new one.
                         </Text>
                     </Alert>
 
-                    <QRCodeSVG size={200} value={`${process.env.NEXT_PUBLIC_API_URL}|${newToken}`} />
+                    <Divider my="xs" w="100%" />
+
+                    <QRCodeSVG
+                        size={200}
+                        value={`${process.env.NEXT_PUBLIC_API_URL}|${newToken}`}
+                    />
+                    <Text size="sm" c="dimmed" ta="center">
+                        Use your mobile app to scan this QR code and log in instantly.
+                    </Text>
                 </Flex>
             )}
         </Flex>

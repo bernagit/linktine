@@ -59,7 +59,7 @@ const remove = async (req: Request, res: Response) => {
     }
 
     await apiTokenService.remove(tokenId);
-    res.status(200).json({ message: 'Ok' });
+    res.status(200).json({ message: "Ok" });
 };
 
 const apiTokensController = {
