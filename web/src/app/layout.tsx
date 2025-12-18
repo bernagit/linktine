@@ -9,7 +9,6 @@ import "@mantine/notifications/styles.css";
 import "@mantine/spotlight/styles.css";
 import "mantine-contextmenu/styles.layer.css";
 import "./layout.css";
-import { ModalsProvider } from "@mantine/modals";
 
 export const metadata: Metadata = {
     title: "LinkTine",
@@ -33,12 +32,10 @@ export default function RootLayout({
             </head>
             <body className="vsc-initialized">
                 <MantineProvider defaultColorScheme="auto" theme={theme}>
-                    <ModalsProvider>
-                        <Notifications />
-                        <AppLayout>
-                            <ContextMenuProvider>{children}</ContextMenuProvider>
-                        </AppLayout>
-                    </ModalsProvider>
+                    <Notifications />
+                    <AppLayout>
+                        <ContextMenuProvider>{children}</ContextMenuProvider>
+                    </AppLayout>
                 </MantineProvider>
             </body>
         </html>
