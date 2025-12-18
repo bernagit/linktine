@@ -53,17 +53,15 @@ export default function CollectionHeader({ collection, updateCollectionColor, sa
                 <Button.Group>
                     <Popover>
                         <Popover.Target>
-                            <Button p={'xs'}>
+                            <Button p={"xs"}>
                                 <FaPlus />
                             </Button>
                         </Popover.Target>
                         <Popover.Dropdown>
-                            <Text>
-                                Content
-                            </Text>
+                            <Text>Content</Text>
                         </Popover.Dropdown>
                     </Popover>
-                    <Button p={'xs'}>
+                    <Button p={"xs"}>
                         <RxDotsHorizontal />
                     </Button>
                 </Button.Group>

@@ -39,14 +39,12 @@ const envSchema = z.object({
         .string()
         .default("false")
         .transform((val) => val === "true"),
-    CORS_ORIGINS: z
-        .string()
-        .transform((val) =>
-            val
-                .split(",")
-                .map((origin) => origin.trim())
-                .filter((origin) => origin.length > 0)
-        ),
+    CORS_ORIGINS: z.string().transform((val) =>
+        val
+            .split(",")
+            .map((origin) => origin.trim())
+            .filter((origin) => origin.length > 0)
+    ),
 });
 
 const _env = envSchema.safeParse(process.env);

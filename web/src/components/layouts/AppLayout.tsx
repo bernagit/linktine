@@ -17,16 +17,18 @@ import AddLinkModal from "@/components/modals/AddLink";
 import AddCollectionModal from "@/components/modals/AddCollection";
 import ShortcutHelp from "../modals/ShortcutHelp";
 import { HotkeyProvider } from "./HotKeysProvider";
+import { useUserStore } from "@/stores/useUserStore";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
     const [opened, { toggle, close }] = useDisclosure();
     const [query, setQuery] = useState<string>("");
     const [debouncedQuery] = useDebouncedValue(query, 200);
     const [actions, setActions] = useState<SpotlightActionData[]>([]);
+    const { fetchUser } = useUserStore();
 
     const pathname = usePathname();
 
-    const skipLayout = pathname.startsWith("/login");
+    const skipLayout = pathname.startsWith("/login") || pathname.startsWith("/profile");
 
     const { moveCollection } = useCollectionsStore();
 
@@ -99,6 +101,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             }
         })();
     }, [debouncedQuery]);
+
+    useEffect(() => {
+        fetchUser();
+    }, [fetchUser]);
 
     if (skipLayout) return <>{children}</>;
     return (
